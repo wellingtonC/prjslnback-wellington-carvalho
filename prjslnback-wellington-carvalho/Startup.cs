@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using prjslnback_wellington_carvalho.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace prjslnback_wellington_carvalho
 {
@@ -21,14 +23,17 @@ namespace prjslnback_wellington_carvalho
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
 
+            #region memory_database
+            services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
+            services.AddScoped<DataContext, DataContext>();
+            #endregion
+
+            #region JWtTokenAutentification
             services.AddCors();
             services.AddControllers();
-            //encoding key
             var key = Encoding.ASCII.GetBytes(Settings.secret);
-            //autentificação
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -47,12 +52,14 @@ namespace prjslnback_wellington_carvalho
                     ValidateAudience = false
                 };
             });
+            #endregion
 
-            //swager
+            #region swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "prjslnback_wellington_carvalho", Version = "v1" });
             });
+            #endregion
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
