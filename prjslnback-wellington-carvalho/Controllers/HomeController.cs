@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using prjslnback_wellington_carvalho.repositories;
 using prjslnback_wellington_carvalho.Services;
 using Microsoft.AspNetCore.Authorization;
-using prjslnback_wellington_carvalho.Data;
 
 namespace prjslnback_wellington_carvalho.Controllers
 {
@@ -11,7 +10,7 @@ namespace prjslnback_wellington_carvalho.Controllers
     public class HomeController : ControllerBase
     {
 
-        [HttpPost]
+        [HttpGet]
         [Route("Login")]
         [AllowAnonymous]
         public async Task<ActionResult<dynamic>> Authenticate( string username, string password) 
@@ -31,13 +30,5 @@ namespace prjslnback_wellington_carvalho.Controllers
                 token = token
             };
         }
-
-        //[HttpPost]
-        //[Route("Sign")]
-        //[AllowAnonymous]
-        //public async Task<ActionResult<dynamic>> CreateUser(string username, string password) 
-        //{
-
-        //}
     }
 }

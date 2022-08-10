@@ -7,8 +7,6 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using prjslnback_wellington_carvalho.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace prjslnback_wellington_carvalho
 {
@@ -23,12 +21,12 @@ namespace prjslnback_wellington_carvalho
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
-            services.AddScoped<DataContext, DataContext>();
+
             services.AddControllers();
 
             services.AddCors();
             services.AddControllers();
+            //encoding key
             var key = Encoding.ASCII.GetBytes(Settings.secret);
             //autentificação
             services.AddAuthentication(x =>
