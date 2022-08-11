@@ -17,6 +17,8 @@ namespace prjslnback_wellington_carvalho.Controllers
         {
             var userData = await context.User.Where(x => x.UserName == userName && x.password == password).FirstOrDefaultAsync();
             if (userData == null) { return BadRequest("Usuario ou senha invalidos"); }
+            //ocultando para que o sistema não retorne a senha do usuario
+            userData.password = "";
             return userData;
         }
 
@@ -33,6 +35,8 @@ namespace prjslnback_wellington_carvalho.Controllers
             {
                 context.User.Add(model);
                 await context.SaveChangesAsync();
+                //ocultando para que o sistema não retorne a senha do usuario
+                model.password = "";
                 return model;
             }
             else
