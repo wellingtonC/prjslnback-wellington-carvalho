@@ -9,7 +9,7 @@ namespace prjslnback_wellington_carvalho.Services
 {
     public static class TokenService
     {
-        public static string GenerateToken(string user) 
+        public static TokenValid GenerateToken(string user) 
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(Settings.secret);
@@ -22,8 +22,14 @@ namespace prjslnback_wellington_carvalho.Services
                 Expires = DateTime.UtcNow.AddMinutes(5),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+
+            TokenValid ValidToken = new TokenValid();
+            ValidToken.tokenValue = tokenHandler.WriteToken(token);
+            ValidToken.expiresDate = tokenDescriptor.Expires.ToString();
+
+            return ValidToken;
         }
     }
 }

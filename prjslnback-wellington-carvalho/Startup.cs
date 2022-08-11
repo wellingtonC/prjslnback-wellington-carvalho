@@ -39,7 +39,7 @@ namespace prjslnback_wellington_carvalho
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            //validação
+
             .AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;

@@ -13,50 +13,41 @@ namespace prjslnback_wellington_carvalho.Controllers
     public class UserController : ControllerBase
     {
         [HttpGet]
-        [Route("")]
-        public async Task<ActionResult<User>> Get([FromServices] DataContext context, string username, string password)
-        {            
-            var categories = await context.User.Where(x => x.userName == username && x.password == password).FirstAsync();
-            if (categories == null) { return BadRequest("Usuario ou senha invalidos"); }
-            return categories;
+        [Route("Login")]
+        public async Task<ActionResult<User>> Get([FromServices] DataContext context, string userName, string password)
+        {
+            var userData = await context.User.Where(x => x.UserName == userName && x.password == password).FirstAsync();
+            if (userData == null) { return BadRequest("Usuario ou senha invalidos"); }
+            return userData;
         }
 
         [HttpPost]
         [Route("Sign")]
         public async Task<ActionResult<User>> Post(
            [FromServices] DataContext context,
-           string username , string password)
+           string userName, string password)
         {
-            var validatepassword=password.ToArray();
-
-            int trys= 0;
-            for (int i = 0; i <= password.Length-1; i++)
+            PasswordValidations passwordValid = new PasswordValidations();
+            if (passwordValid.PasswordValidator(password) == true)
             {
-                if (i >= 1)
+
+                TokenValid tokenValidate = TokenService.GenerateToken(userName);
+                User model = new User() { UserName = userName, password = password, Token = tokenValidate.tokenValue, expirationDate= tokenValidate.expiresDate };
+
+                if (ModelState.IsValid)
                 {
-                    if (validatepassword[i] == validatepassword[i - 1])
-                    {
-                        trys++;
-                        if (trys >= 2) 
-                        {
-                            return BadRequest("A senha não pode  conter muitos caracteres repetidos");
-                        }
-                    }
+                    context.User.Add(model);
+                    await context.SaveChangesAsync();
+                    return model;
+                }
+                else
+                {
+                    return BadRequest(ModelState);
                 }
             }
-            var token = TokenService.GenerateToken(username);
-            User model = new User(){ userName=username, password =password, Token = token};
 
-            if (ModelState.IsValid)
-            {
-                context.User.Add(model);
-                await context.SaveChangesAsync();
-                return model;
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+            return BadRequest("senha invalida");
+
         }
     }
 }
