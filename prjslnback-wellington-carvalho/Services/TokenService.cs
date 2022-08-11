@@ -9,7 +9,7 @@ namespace prjslnback_wellington_carvalho.Services
 {
     public static class TokenService
     {
-        public static TokenValid GenerateToken(string user) 
+        public static TokenValidDTO GenerateToken(string user) 
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(Settings.secret);
@@ -25,7 +25,7 @@ namespace prjslnback_wellington_carvalho.Services
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            TokenValid ValidToken = new TokenValid();
+            TokenValidDTO ValidToken = new TokenValidDTO();
             ValidToken.tokenValue = tokenHandler.WriteToken(token);
             ValidToken.expiresDate = tokenDescriptor.Expires.ToString();
 

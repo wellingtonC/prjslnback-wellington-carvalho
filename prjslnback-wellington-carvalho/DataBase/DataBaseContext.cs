@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace prjslnback_wellington_carvalho.Data
 {
-    public class DataContext : DbContext
+    public class DataBaseContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) :
+        public DataBaseContext(DbContextOptions<DataBaseContext> options) :
             base(options)
         {
         }
-        public DbSet<User> User { get; set; }
+        public DbSet<UserDTO> User { get; set; }
     }
 }

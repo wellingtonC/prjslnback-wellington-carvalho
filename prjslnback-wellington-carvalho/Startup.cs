@@ -26,8 +26,8 @@ namespace prjslnback_wellington_carvalho
             services.AddControllers();
 
             #region memory_database
-            services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
-            services.AddScoped<DataContext, DataContext>();
+            services.AddDbContext<DataBaseContext>(opt => opt.UseInMemoryDatabase("Database"));
+            services.AddScoped<DataBaseContext, DataBaseContext>();
             #endregion
 
             #region JWtTokenAutentification

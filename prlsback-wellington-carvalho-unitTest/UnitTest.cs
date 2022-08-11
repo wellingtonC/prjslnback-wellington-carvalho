@@ -1,13 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using prjslnback_wellington_carvalho.Controllers;
-using prjslnback_wellington_carvalho.Data;
 using prjslnback_wellington_carvalho.Models;
 using prjslnback_wellington_carvalho.Services;
 using Xunit;
 
-namespace UnitTestProject
+namespace prlsback_wellington_carvalho_unitTest
 {
-    public class UnitTest1
+    public class UnitTest
     {
         [Fact]
         public void testGenerateToken()
@@ -23,12 +20,10 @@ namespace UnitTestProject
         }
 
         [Fact]
-        public void testCreateUser() 
+        public void testCreateUser()
         {
             UserValidator user = new UserValidator();
-            Assert.notnu(user.GenerateUser("James", "J0sE_"));
+            Assert.NotNull(user.GenerateUser("James", "J0sE_"));
         }
-
-
     }
 }

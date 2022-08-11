@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace prjslnback_wellington_carvalho.Models
 {
-    public class User
+    public class UserDTO
     {
         [Key]
         public int id { get; set; }

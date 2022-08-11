@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using prjslnback_wellington_carvalho.Data;
 using prjslnback_wellington_carvalho.Models;
-using prjslnback_wellington_carvalho.Services;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,41 +13,34 @@ namespace prjslnback_wellington_carvalho.Controllers
     {
         [HttpGet]
         [Route("Login")]
-        public async Task<ActionResult<User>> Get([FromServices] DataContext context, string userName, string password)
+        public async Task<ActionResult<UserDTO>> Get([FromServices] DataBaseContext context, string userName, string password)
         {
-            var userData = await context.User.Where(x => x.UserName == userName && x.password == password).FirstAsync();
+            var userData = await context.User.Where(x => x.UserName == userName && x.password == password).FirstOrDefaultAsync();
             if (userData == null) { return BadRequest("Usuario ou senha invalidos"); }
             return userData;
         }
 
         [HttpPost]
         [Route("Sign")]
-        public async Task<ActionResult<User>> Post(
-           [FromServices] DataContext context,
+        public async Task<ActionResult<UserDTO>> Post(
+           [FromServices] DataBaseContext context,
            string userName, string password)
         {
-            PasswordValidations passwordValid = new PasswordValidations();
-            if (passwordValid.PasswordValidator(password) == true)
+            UserValidator userGenerator = new UserValidator();
+            UserDTO model = userGenerator.GenerateUser(userName, password);
+
+            if (ModelState.IsValid)
             {
-
-                TokenValid tokenValidate = TokenService.GenerateToken(userName);
-                User model = new User() { UserName = userName, password = password, Token = tokenValidate.tokenValue, expirationDate= tokenValidate.expiresDate };
-
-                if (ModelState.IsValid)
-                {
-                    context.User.Add(model);
-                    await context.SaveChangesAsync();
-                    return model;
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
+                context.User.Add(model);
+                await context.SaveChangesAsync();
+                return model;
             }
-
-            return BadRequest("senha invalida");
-
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
     }
 }
+
 
