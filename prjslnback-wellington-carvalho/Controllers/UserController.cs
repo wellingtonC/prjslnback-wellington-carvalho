@@ -31,18 +31,23 @@ namespace prjslnback_wellington_carvalho.Controllers
             UserValidator userGenerator = new UserValidator();
             UserDTO model = userGenerator.GenerateUser(userName, password);
 
-            if (ModelState.IsValid)
+            if (model != null)
             {
-                context.User.Add(model);
-                await context.SaveChangesAsync();
-                //ocultando para que o sistema não retorne a senha do usuario
-                model.password = "";
-                return model;
+                if (ModelState.IsValid)
+                {
+                    context.User.Add(model);
+                    await context.SaveChangesAsync();
+                    //ocultando para que o sistema não retorne a senha do usuario
+                    model.password = "";
+                    return model;
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
             }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+            else { return BadRequest("Senha Invalida"); }
+           
         }
     }
 }
